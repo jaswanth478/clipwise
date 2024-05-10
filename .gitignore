@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.dist-info/
+*.egg-info/
+*.egg
+.Python
+
+# Virtual env / site packages
+bin/
+lib/
+include/
+env/
+venv/
+*.venv/
+*.env/
+*.DS_Store
+
+# Installed packages
+boto3/
+botocore/
+certifi/
+charset_normalizer/
+dateutil/
+defusedxml/
+ffmpeg/
+future/
+idna/
+jmespath/
+libfuturize/
+libpasteurize/
+past/
+requests/
+s3transfer/
+urllib3/
+six.py
+youtube_transcript_api/
+
+# Sensitive
+.env

@@ -35,6 +35,11 @@ s3transfer/
 urllib3/
 six.py
 youtube_transcript_api/
+Frontend/node_modules/
+Frontend/package-lock.json
+Frontend/yarn.lock
+Frontend/.next/cache/
+
 
 # Sensitive
 .env

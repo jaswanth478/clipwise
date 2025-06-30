@@ -49,14 +49,9 @@ export default function ClipCard({ clip }: ClipCardProps) {
     }
 
     const handleDownload = () => {
-        console.log(clip.s3_url)
-        if (clip.s3_url) {
-            window.open(clip.s3_url, '_blank');
-        } else {
-            alert("Video URL is missing");
-        }
+        // Open download in new tab
+        window.open(clip.s3_url, '_blank')
     }
-    
 
     const handleShare = async () => {
         if (navigator.share) {
@@ -119,7 +114,7 @@ export default function ClipCard({ clip }: ClipCardProps) {
                 </div>
 
                 {/* Interest Reasons */}
-                {/* {clip.interest_reasons.length > 0 && (
+                {clip.interest_reasons.length > 0 && (
                     <div className="mb-4">
                         <div className="flex flex-wrap gap-1">
                             {clip.interest_reasons.slice(0, 3).map((reason, index) => (
@@ -132,7 +127,7 @@ export default function ClipCard({ clip }: ClipCardProps) {
                             ))}
                         </div>
                     </div>
-                )} */}
+                )}
 
                 {/* File Info */}
                 <div className="flex items-center justify-between text-xs text-gray-500 mb-4">

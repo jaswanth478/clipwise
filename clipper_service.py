@@ -54,10 +54,11 @@ class ClipperService:
             temp_file = os.path.join(self.temp_dir, "downloaded_video.mp4")
 
             ydl_opts = {
-                'format': 'best[ext=mp4]/best',
+                'format': 'best[height<=720]/worst',  # More flexible format selection
                 'outtmpl': temp_file,
                 'quiet': True,
                 'no_warnings': True,
+                'ignoreerrors': True,
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -73,6 +74,14 @@ class ClipperService:
 
         except Exception as e:
             logger.error(f"Error downloading video: {e}")
+            # Try to get more information about available formats
+            try:
+                with yt_dlp.YoutubeDL({'quiet': True}) as ydl:
+                    info = ydl.extract_info(youtube_url, download=False)
+                    formats = info.get('formats', [])
+                    logger.error(f"Available formats: {[f.get('format_id', 'unknown') for f in formats[:5]]}")
+            except Exception as format_error:
+                logger.error(f"Could not get format info: {format_error}")
             raise
 
     def _create_clip(self, video_path: str, suggestion: Dict[str, Any]) -> Optional[Dict[str, Any]]:

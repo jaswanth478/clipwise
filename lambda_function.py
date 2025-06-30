@@ -38,9 +38,55 @@ def lambda_handler(event, context=None):
 
         logger.info(f"Processing YouTube URL: {youtube_url}")
 
-        # 1. Fetch transcript
+        # 1. Fetch transcript to get video_id
         transcript_data = transcript_service.get_transcript(youtube_url)
-        logger.info(f"Fetched transcript for video {transcript_data['video_id']} with {transcript_data['total_segments']} segments.")
+        video_id = transcript_data['video_id']
+        logger.info(f"Video ID: {video_id}")
+
+        # Check if clips already exist in DynamoDB
+        existing_clips = metadata_service.get_clips_by_video(video_id)
+        if existing_clips:
+            logger.info(f"Found {len(existing_clips)} existing clips for video {video_id}")
+            
+            # Convert DynamoDB items to response format
+            clips_response = []
+            for clip in existing_clips:
+                # Convert Decimal to float for JSON serialization
+                def convert_decimals(obj):
+                    if isinstance(obj, dict):
+                        return {k: convert_decimals(v) for k, v in obj.items()}
+                    elif isinstance(obj, list):
+                        return [convert_decimals(v) for v in obj]
+                    elif hasattr(obj, 'as_tuple'):  # Decimal type
+                        return float(obj)
+                    else:
+                        return obj
+                
+                converted_clip = convert_decimals(clip)
+                clips_response.append({
+                    "clip_id": converted_clip['clip_id'],
+                    "s3_url": converted_clip['s3_url'],
+                    "start_time": converted_clip['start_time'],
+                    "end_time": converted_clip['end_time'],
+                    "duration": converted_clip['duration'],
+                    "interest_score": converted_clip['interest_score'],
+                    "interest_reasons": converted_clip['interest_reasons'],
+                    "transcript_text": converted_clip['transcript_text'],
+                    "file_size_formatted": converted_clip.get('file_size_formatted', ''),
+                    "resolution": converted_clip.get('resolution', ''),
+                    "expires_at": converted_clip.get('expires_at', None)
+                })
+            
+            response = {
+                "video_id": video_id,
+                "clips": clips_response,
+                "from_cache": True
+            }
+            logger.info(f"Returning {len(clips_response)} cached clips.")
+            return {"statusCode": 200, "body": json.dumps(response)}
+
+        # If no existing clips, process normally
+        logger.info(f"No existing clips found for video {video_id}, processing...")
 
         # 2. Find interesting segments
         clip_suggestions = ml_tagger_service.get_clip_suggestions(transcript_data)
@@ -50,7 +96,7 @@ def lambda_handler(event, context=None):
         logger.info(f"Found {len(clip_suggestions)} interesting segments.")
 
         # 3. Download and clip video
-        clips = clipper_service.download_and_clip(youtube_url, clip_suggestions)
+        clips = clipper_service.download_and_clip(youtube_url, clip_suggestions[:2])
         if not clips:
             logger.error("No clips were created.")
             return {"statusCode": 500, "body": json.dumps({"error": "No clips were created."})}

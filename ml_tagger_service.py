@@ -167,7 +167,7 @@ class MLTaggerService:
                     'interest_score': score,
                     'interest_reasons': reasons,
                     'clip_start': seg['start'],
-                    'clip_end': min(seg['end'], seg['start'] + self.max_clip_duration)
+                    'clip_end': min(seg['end'], seg['start']) + self.max_clip_duration
                 })
         return results
 

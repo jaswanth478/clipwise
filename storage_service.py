@@ -21,7 +21,7 @@ class StorageService:
         # S3 configuration
         self.clip_prefix = 'clips/'
         self.preview_prefix = 'previews/'
-        self.signed_url_expiry = 3600  # 1 hour
+        self.signed_url_expiry = 3600 * 24 * 5 # 30 days
         
         # Content type for video files
         self.video_content_type = 'video/mp4'

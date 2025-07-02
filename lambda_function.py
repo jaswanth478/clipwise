@@ -11,10 +11,14 @@ from dotenv import load_dotenv
 
 
 
+
+
+
 # Set up logging
 load_dotenv()
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
 
 # Initialize services (reuse across invocations if possible)
 transcript_service = TranscriptService()
@@ -38,12 +42,21 @@ def lambda_handler(event, context=None):
 
         logger.info(f"Processing YouTube URL: {youtube_url}")
 
-        # 1. Fetch transcript to get video_id
-        transcript_data = transcript_service.get_transcript(youtube_url)
-        video_id = transcript_data['video_id']
-        logger.info(f"Video ID: {video_id}")
+        # https://www.youtube.com/watch?v=KzM3A2Moipc&list=RDKzM3A2Moipc&start_radio=1
+
+        def get_video_id(youtube_url):
+            # afdter ?v= utnil & or lat part 
+            video_id = youtube_url.split('?v=')[1]
+            if '&' in video_id:
+                video_id = video_id.split('&')[0]
+            return video_id
+        
+
+
+        
 
         # Check if clips already exist in DynamoDB
+        video_id = get_video_id(youtube_url)
         existing_clips = metadata_service.get_clips_by_video(video_id)
         if existing_clips:
             logger.info(f"Found {len(existing_clips)} existing clips for video {video_id}")
@@ -84,6 +97,11 @@ def lambda_handler(event, context=None):
             }
             logger.info(f"Returning {len(clips_response)} cached clips.")
             return {"statusCode": 200, "body": json.dumps(response)}
+        
+        # 1. Fetch transcript to get video_id
+        transcript_data = transcript_service.get_transcript(youtube_url)
+        video_id = transcript_data['video_id']
+        logger.info(f"Video ID: {video_id}")
 
         # If no existing clips, process normally
         logger.info(f"No existing clips found for video {video_id}, processing...")

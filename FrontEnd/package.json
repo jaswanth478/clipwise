@@ -16,7 +16,9 @@
         "framer-motion": "^10.16.4",
         "tailwindcss": "^3.3.0",
         "autoprefixer": "^10.4.16",
-        "postcss": "^8.4.31"
+        "postcss": "^8.4.31",
+        "@aws-sdk/client-s3": "^3.751.0",
+        "@aws-sdk/s3-request-presigner": "^3.751.0"
     },
     "devDependencies": {
         "@types/node": "^20",

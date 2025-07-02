@@ -16,18 +16,6 @@ import {
 
 const features = [
     {
-        icon: Users,
-        title: 'Team Collaboration',
-        description: 'Share clips with your team and collaborate on content creation',
-        color: 'from-blue-500 to-blue-600'
-    },
-    {
-        icon: Palette,
-        title: 'Custom Branding',
-        description: 'Add your logo, colors, and custom overlays to clips',
-        color: 'from-purple-500 to-purple-600'
-    },
-    {
         icon: Music,
         title: 'Background Music',
         description: 'Add royalty-free music tracks to enhance your clips',
@@ -46,23 +34,11 @@ const features = [
         color: 'from-pink-500 to-pink-600'
     },
     {
-        icon: BarChart3,
-        title: 'Analytics Dashboard',
-        description: 'Track performance and engagement of your clips',
-        color: 'from-indigo-500 to-indigo-600'
-    },
-    {
         icon: Cloud,
         title: 'Cloud Storage',
         description: 'Store and organize your clips in the cloud',
         color: 'from-cyan-500 to-cyan-600'
     },
-    {
-        icon: Shield,
-        title: 'Advanced Security',
-        description: 'Enterprise-grade security and privacy controls',
-        color: 'from-red-500 to-red-600'
-    }
 ]
 
 export default function V2Features() {
@@ -126,9 +102,13 @@ export default function V2Features() {
                     <p className="text-primary-100 mb-6">
                         Be the first to experience the next generation of video clipping
                     </p>
-                    <button className="bg-white text-primary-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                        Join Waitlist
+                    <button
+                        className="bg-white text-primary-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                        onClick={() => window.open('https://github.com/jaswanth478/clipwise', '_blank')}
+                    >
+                        View on GitHub
                     </button>
+
                 </div>
             </motion.div>
         </section>

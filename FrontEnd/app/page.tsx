@@ -86,7 +86,13 @@ export default function Home() {
             console.log('Video ID:', data.video_id) // Debug log
             setClips(data.clips || [])
             setVideoId(data.video_id || '')
-            setDebugData(data) // Store for debugging
+
+            // dont'show s3_url in debug data
+            const sanitizedClips = data.clips.map((clip: Clip) => ({
+                ...clip,
+                s3_url: undefined, // Remove s3_url for security
+            }))
+            setDebugData(sanitizedClips) // Store for debugging
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred')
         } finally {
@@ -264,7 +270,7 @@ export default function Home() {
                             Transform your videos into engaging content with AI
                         </p>
                         <div className="mt-6 flex justify-center space-x-6 text-sm text-gray-400">
-                            <span>© 2024 ClipWise</span>
+                            <span>© 2025 ClipWise</span>
                             <span>•</span>
                             <span>Privacy Policy</span>
                             <span>•</span>

@@ -39,6 +39,9 @@ Frontend/node_modules/
 Frontend/package-lock.json
 Frontend/yarn.lock
 Frontend/.next/cache/
+Frontend/.next/
+Frontend/.next/static/webpack
+
 
 
 # Sensitive

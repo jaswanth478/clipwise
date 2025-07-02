@@ -54,7 +54,7 @@ class ClipperService:
             temp_file = os.path.join(self.temp_dir, "downloaded_video.mp4")
 
             ydl_opts = {
-                'format': 'best[height<=720]/worst',  # More flexible format selection
+                'format': 'bestvideo[height<=720]+bestaudio/best/worst',
                 'outtmpl': temp_file,
                 'quiet': True,
                 'no_warnings': True,

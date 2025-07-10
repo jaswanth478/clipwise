@@ -51,37 +51,34 @@ class ClipperService:
         try:
             logger.info(f"Downloading video: {youtube_url}")
 
-            temp_file = os.path.join(self.temp_dir, "downloaded_video.mp4")
+            outtmpl = os.path.join(self.temp_dir, "%(id)s.%(ext)s")
 
             ydl_opts = {
-                'format': 'bestvideo[height<=720]+bestaudio/best/worst',
-                'outtmpl': temp_file,
-                'quiet': True,
-                'no_warnings': True,
-                'ignoreerrors': True,
+            'format': 'bestvideo[height<=720]+bestaudio/best/worst',
+            'outtmpl': outtmpl,
+            'quiet': True,
+            'no_warnings': True,
+            'ignoreerrors': False,
+            'merge_output_format': 'mp4',
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(youtube_url, download=True)
-                video_title = info.get("title", "unknown")
                 video_id = info.get("id", "unknown")
                 duration = info.get("duration", 0)
+                video_title = info.get("title", "unknown")
+
+            output_file = os.path.join(self.temp_dir, f"{video_id}.mp4")
+            if not os.path.exists(output_file):
+                raise FileNotFoundError(f"Downloaded file not found: {output_file}")
 
             logger.info(f"Video title: {video_title}")
             logger.info(f"Video duration: {duration} seconds")
-            logger.info(f"Video downloaded to: {temp_file}")
-            return temp_file, video_id
+            logger.info(f"Video downloaded to: {output_file}")
+            return output_file, video_id
 
         except Exception as e:
             logger.error(f"Error downloading video: {e}")
-            # Try to get more information about available formats
-            try:
-                with yt_dlp.YoutubeDL({'quiet': True}) as ydl:
-                    info = ydl.extract_info(youtube_url, download=False)
-                    formats = info.get('formats', [])
-                    logger.error(f"Available formats: {[f.get('format_id', 'unknown') for f in formats[:5]]}")
-            except Exception as format_error:
-                logger.error(f"Could not get format info: {format_error}")
             raise
 
     def _create_clip(self, video_path: str, suggestion: Dict[str, Any]) -> Optional[Dict[str, Any]]:

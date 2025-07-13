@@ -16,8 +16,8 @@ class MLTaggerService:
         """Initialize AWS Comprehend client."""
         self.comprehend = boto3.client('comprehend', region_name='us-east-1')
 
-        self.max_clip_duration = 30.0  # seconds
-        self.min_clip_duration = 7.0   # slightly longer minimum clips
+        self.max_clip_duration = 40.0  # seconds
+        self.min_clip_duration = 10.0   # slightly longer minimum clips
         self.max_clips_per_video = 10
 
         # Strong indicator words

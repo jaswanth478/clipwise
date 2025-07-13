@@ -114,7 +114,7 @@ def lambda_handler(event, context=None):
         logger.info(f"Found {len(clip_suggestions)} interesting segments.")
 
         # 3. Download and clip video
-        clips = clipper_service.download_and_clip(youtube_url, clip_suggestions[:2])
+        clips = clipper_service.download_and_clip(youtube_url, clip_suggestions[:4])
         if not clips:
             logger.error("No clips were created.")
             return {"statusCode": 500, "body": json.dumps({"error": "No clips were created."})}

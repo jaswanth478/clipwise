@@ -1,4 +1,4 @@
-// File: /Users/illumine/Documents/clipwise/FrontEnd/app/page.tsx
+// File: /Users/illumine/projects/clipwise/FrontEnd/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

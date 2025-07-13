@@ -54,10 +54,24 @@ export default function Home() {
         setError('')
         setClips([])
         setVideoId('')
+        let cachedBaseUrl: string | null = null;
+
+        async function getBaseUrl() {
+            if (cachedBaseUrl) return cachedBaseUrl;
+
+            const configRes = await fetch('https://gist.githubusercontent.com/jaswanth478/36d4778afeb032674b8b60b3d5eefe4f/raw/config.json');
+
+            if (!configRes.ok) {
+                throw new Error("Failed to fetch base URL config");
+            }
+
+            const config = await configRes.json();
+            cachedBaseUrl = config.baseUrl;
+            return cachedBaseUrl;
+        }
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/clip', {
-
+            const response = await fetch(`${await getBaseUrl()}/clip`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

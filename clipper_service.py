@@ -18,8 +18,8 @@ class ClipperService:
     def __init__(self):
         """Initialize the clipper service."""
         self.temp_dir = tempfile.mkdtemp()
-        self.max_clip_duration = 30.0  # seconds
-        self.min_clip_duration = 5.0   # seconds
+        self.max_clip_duration = 60.0  # seconds
+        self.min_clip_duration = 10.0   # seconds
 
     def download_and_clip(self, youtube_url: str, clip_suggestions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         try:
